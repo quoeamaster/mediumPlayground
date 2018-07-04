@@ -4,11 +4,11 @@
     <h3><i class="fa fa-star-o" aria-hidden="true"></i> Select an app <i class="fa fa-star" aria-hidden="true"></i></h3>
     <div class="container container-fluid selecttion-container">
       <div class="row">
-        <div class="col-6 col-sm-6 col-md-6" @click="fwdToView('ClientSideMain')">
-          <span class="blue-text option-caption">client-side</span> playground app
+        <div class="col-6 col-sm-6 col-md-6" @click="fwdToView('ClientSideHelp')">
+          <span class="blue-text option-caption pointer">client-side</span> playground app
         </div>
         <div class="col-6 col-sm-6 col-md-6" @click="fwdToView('ServerSideMain')">
-          <span class="danger-ic option-caption">server-side</span> playground app
+          <span class="danger-ic option-caption pointer">server-side</span> playground app
         </div>
       </div>
     </div>
@@ -26,6 +26,9 @@
 .option-caption {
   font-size: 1.2em;
   font-weight: bolder;
+}
+.pointer {
+  cursor: pointer;
 }
 </style>
 

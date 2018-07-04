@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 
 import 'jquery/dist/jquery.js'
+import 'elasticsearch/src/elasticsearch.jquery.js'
 // bootstrap css
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'mdbootstrap/css/mdb.min.css'
