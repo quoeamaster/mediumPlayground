@@ -39,6 +39,8 @@
             <div class="result-inner-container" v-html="code">
             </div>
           </div>
+          <!-- added this hidden element for "copy" -->
+          <input type="text" id="hiddenCode" style="display: none;">
         </div>
       </div>
     </div>
@@ -114,7 +116,7 @@ export default {
       }
       if (this.maxRetries) {
         if (!isNaN(this.maxRetries)) {
-          code += '<br/>' + tab + 'maxRetries: "' + this.maxRetries + '",'
+          code += '<br/>' + tab + 'maxRetries: ' + this.maxRetries + ','
           hasContentBuilt = true
         }
       }
@@ -132,7 +134,41 @@ export default {
       this.code = code
     },
     copyToClipboard: function () {
-      console.log('to be detailed')
+      // hiddenCode
+      let code = 'var client = $.es.Client({'
+      let hasContentBuilt = false
+
+      if (this.hosts && this.hosts.length > 0) {
+        code += '"hosts": "' + this.hosts + '",'
+      }
+      if (this.apiVersion !== '') {
+        code += '"apiVersion": "' + this.apiVersion + '",'
+      }
+      if (this.maxRetries) {
+        if (!isNaN(this.maxRetries)) {
+          code += '"maxRetries": ' + this.maxRetries + ','
+          hasContentBuilt = true
+        }
+      }
+      if (this.selector !== '') {
+        code += '"selector": "' + this.selector + '",'
+        hasContentBuilt = true
+      }
+
+      if (hasContentBuilt) {
+        // remove the last character
+        code = code.substring(0, code.length - 1)
+      }
+      code += '})'
+
+      // set value to the hidden html element
+      let jCode = window.jQuery('#hiddenCode')
+
+      jCode.val(code)
+      jCode.css({ display: 'block' })
+      jCode[0].select()
+      document.execCommand('copy')
+      jCode.css({ display: 'none' })
     }
   }
 }
