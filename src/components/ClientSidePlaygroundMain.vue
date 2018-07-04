@@ -14,7 +14,7 @@
         Queries
         <div class="app-navbar-item">
           <div class="app-navbar-item-block">
-            <a href="javascript:void(0);" >match all</a>
+            <a href="javascript:void(0);" @click="fwdToClientMatchAllQuery()" >match all</a>
           </div>
           <div class="app-navbar-item-block">
             <a href="javascript:void(0);" >match</a>
@@ -112,7 +112,7 @@ function ModelClientSidePlaygroundMain () {
 export default {
   name: 'client-side-playground-main',
   data: function () {
-    return ModelClientSidePlaygroundMain()
+    return new ModelClientSidePlaygroundMain()
   },
   methods: {
     fwdToHelp: function () {
@@ -123,6 +123,9 @@ export default {
     },
     fwdToClientConnectivity: function () {
       this.$router.push({ name: 'ClientSideConnect' })
+    },
+    fwdToClientMatchAllQuery: function () {
+      this.$router.push({ name: 'ClientSideMatchAllQ' })
     }
   }
 }

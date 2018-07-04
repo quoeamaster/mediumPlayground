@@ -26,6 +26,7 @@
             <option value="roundRobin">round robin</option>
             <option value="random">random</option>
           </select>
+          <button class="btn btn-green" style="margin-top: 32px;" @click="initClientAndSaveToStore()">init connection client</button>
         </div>
         <div class="col-md-6 col-sm-12">
           <!-- text box like grid -->
@@ -87,24 +88,44 @@ function ModelClientSideConnect () {
     selector: '',
 
     // actual code to display
-    code: ''
+    code: '',
+    // if any of the config options has been updated (assume need to init a new client)
+    configUpdate: false,
+    // if the client has been init-ed with the latest given options
+    clientStored: false
   }
 }
 export default {
   name: 'client-side-connect',
   data: function () {
-    return ModelClientSideConnect()
+    return new ModelClientSideConnect()
+  },
+  // life cycle method for router
+  beforeRouteLeave (to, from, next) {
+    if (this.configUpdate === true) {
+      let canDiscard = confirm('configuration changed, YES to discard')
+      console.log(canDiscard)
+      if (canDiscard === true) {
+        next(true)
+      } else {
+        next(false)
+      }
+    } else {
+      next(true)
+    }
   },
   methods: {
     // return the elasticsearch instance / object
-    getES: function () {
+    GetES: function () {
       return window.jQuery.es
     },
     formCode: function () {
-      // let code = 'var client = $.es.Client({' + '<br/>&nbsp;&nbsp;&nbsp;host: "' + this.hosts + '" ' + '})'
       let tab = '&nbsp;&nbsp;&nbsp;&nbsp;'
       let code = 'var client = $.es.Client({'
       let hasContentBuilt = false
+
+      // config has been modified
+      this.configUpdate = true
 
       if (this.hosts && this.hosts !== '') {
         code += '<br/>' + tab + 'hosts: "' + this.hosts + '",'
@@ -162,13 +183,37 @@ export default {
       code += '})'
 
       // set value to the hidden html element
-      let jCode = window.jQuery('#hiddenCode')
+      let isOk = window.UIUtil.copyContentToClipboard(window.jQuery, 'hiddenCode', code)
+      if (isOk) {
+        alert('code copied to clipboard successfully~ use ctrl+v to paste the code')
+      }
+    },
+    initClientAndSaveToStore: function () {
+      if (this.configUpdate === true) {
+        console.log('need to create a new ES client')
 
-      jCode.val(code)
-      jCode.css({ display: 'block' })
-      jCode[0].select()
-      document.execCommand('copy')
-      jCode.css({ display: 'none' })
+        let clientConf = {}
+
+        if (this.hosts != null && this.hosts.length > 0) {
+          clientConf['hosts'] = this.hosts
+        } else {
+          clientConf['hosts'] = 'localhost:9200'
+        }
+        if (this.apiVersion !== '') {
+          clientConf['apiVersion'] = this.apiVersion
+        }
+        if (this.maxRetries && !isNaN(this.maxRetries)) {
+          clientConf['maxRetries'] = this.maxRetries
+        }
+        if (this.selector !== '') {
+          clientConf['selector'] = this.selector
+        }
+
+        let client = new this.GetES().Client(clientConf)
+        this.$store.commit('setClientSideESClient', { 'clientSideESClient': client })
+
+        this.configUpdate = false
+      } // end -- if (config updated, time to create a new client)
     }
   }
 }

@@ -5,6 +5,7 @@ import AppSelect from '@/components/AppSelect'
 import ClientSideMain from '@/components/ClientSidePlaygroundMain'
 import ClientSideHelp from '@/components/ClientSideHelp'
 import ClientSideConnect from '@/components/ClientSideConnect'
+import ClientSideMatchAllQ from '@/components/ClientSideMatchAllQ'
 
 import ServerSideMain from '@/components/ServerSidePlaygroundMain'
 
@@ -30,6 +31,11 @@ export default new Router({
           path: '/ClientSideConnect',
           name: 'ClientSideConnect',
           component: ClientSideConnect
+        },
+        {
+          path: '/ClientSideMatchAllQ',
+          name: 'ClientSideMatchAllQ',
+          component: ClientSideMatchAllQ
         }
       ]
     },
